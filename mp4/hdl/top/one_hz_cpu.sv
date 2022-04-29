@@ -571,6 +571,7 @@ module one_hz_cpu (
     alu_ctrl_sigs_t alu_ctrl;
     alu_decode alu_dec0 (
         .uopcode(ctrl_sigs_iq.uopcode),
+        .shamt(ctrl_sigs_iq.packed_imm[12:8]),
         .ctrl(alu_ctrl)
     );
 

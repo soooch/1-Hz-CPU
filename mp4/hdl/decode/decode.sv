@@ -102,27 +102,27 @@ module decode_mux (
             dec_op::REM    : dc.ctrl = '{1'b0, uopc::rem,    exut::mul, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
             dec_op::REMU   : dc.ctrl = '{1'b0, uopc::remu,   exut::mul, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
 
-            dec_op::ANDN   : dc.ctrl = '{1'b0, uopc::andn,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
-            dec_op::ORN    : dc.ctrl = '{1'b0, uopc::orn,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
-            dec_op::XNOR   : dc.ctrl = '{1'b0, uopc::xnoro,  exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::ANDN   : dc.ctrl = '{1'b1, uopc::andn,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::ORN    : dc.ctrl = '{1'b1, uopc::orn,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::XNOR   : dc.ctrl = '{1'b1, uopc::xnoro,  exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
 
             dec_op::ROL    : dc.ctrl = '{1'b0, uopc::rol,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
             dec_op::ROR    : dc.ctrl = '{1'b0, uopc::ror,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
             dec_op::RORI   : dc.ctrl = '{1'b0, uopc::rori,   exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
 
-            dec_op::MIN    : dc.ctrl = '{1'b0, uopc::min,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
-            dec_op::MINU   : dc.ctrl = '{1'b0, uopc::minu,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
-            dec_op::MAX    : dc.ctrl = '{1'b0, uopc::max,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
-            dec_op::MAXU   : dc.ctrl = '{1'b0, uopc::maxu,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::MIN    : dc.ctrl = '{1'b1, uopc::min,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::MINU   : dc.ctrl = '{1'b1, uopc::minu,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::MAX    : dc.ctrl = '{1'b1, uopc::max,    exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::MAXU   : dc.ctrl = '{1'b1, uopc::maxu,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
 
-            dec_op::GREVI  : dc.ctrl = '{1'b0, uopc::grevi,  exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
+            dec_op::GREVI  : dc.ctrl = '{1'b1, uopc::grevi,  exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
             dec_op::GORCI  : dc.ctrl = '{1'b0, uopc::gorci,  exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
 
             // TODO: this may need to be broken into sub instructions in
             // decode by using shamt
-            dec_op::CBSEXT : dc.ctrl = '{1'b0, uopc::cbsext, exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
+            dec_op::CBSEXT : dc.ctrl = '{1'b1, uopc::cbsxt, exut::alu, 1'b1, 1'b1, 1'b0, 1'b0, immt::i};
             // we will only implement Zbb so PACK is only used for zext.h and rs2 can only take zero.
-            dec_op::PACK   : dc.ctrl = '{1'b0, uopc::pack,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
+            dec_op::PACK   : dc.ctrl = '{1'b1, uopc::pack,   exut::alu, 1'b1, 1'b1, 1'b1, 1'b0, immt::imm_type_t'('X)};
 
             default        : dc.ctrl = '{1'b0, uopc::add,    exut::alu, 1'b0, 1'b0, 1'b0, 1'b0, immt::imm_type_t'('X)};
         endcase

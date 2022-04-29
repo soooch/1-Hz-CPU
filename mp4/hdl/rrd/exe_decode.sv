@@ -3,35 +3,54 @@ import ctrl_sigs::*;
 
 module alu_decode (
     input uopc::micro_opcode_t uopcode,
+    input logic [4:0] shamt,
     output alu_ctrl_sigs_t ctrl
 );
 
     always_comb begin
-        unique case (uopcode)
-            uopc::lui    : ctrl = '{alufnt::add,  opr2t::imm};
+        unique casez ({uopcode, shamt})
+            {uopc::lui, 5'b?????}    : ctrl = '{alufnt::add,  opr2t::imm};
 
-            uopc::addi   : ctrl = '{alufnt::add,  opr2t::imm};
-            uopc::slti   : ctrl = '{alufnt::slt,  opr2t::imm};
-            uopc::sltiu  : ctrl = '{alufnt::sltu, opr2t::imm};
-            uopc::xori   : ctrl = '{alufnt::xoro, opr2t::imm};
-            uopc::ori    : ctrl = '{alufnt::oro,  opr2t::imm};
-            uopc::andi   : ctrl = '{alufnt::ando, opr2t::imm};
-            uopc::slli   : ctrl = '{alufnt::sl,   opr2t::imm};
-            uopc::srli   : ctrl = '{alufnt::sr,   opr2t::imm};
-            uopc::srai   : ctrl = '{alufnt::sra,  opr2t::imm};
+            {uopc::addi,  5'b?????} : ctrl = '{alufnt::add,  opr2t::imm};
+            {uopc::slti,  5'b?????} : ctrl = '{alufnt::slt,  opr2t::imm};
+            {uopc::sltiu, 5'b?????} : ctrl = '{alufnt::sltu, opr2t::imm};
+            {uopc::xori,  5'b?????} : ctrl = '{alufnt::xoro, opr2t::imm};
+            {uopc::ori,   5'b?????} : ctrl = '{alufnt::oro,  opr2t::imm};
+            {uopc::andi,  5'b?????} : ctrl = '{alufnt::ando, opr2t::imm};
+            {uopc::slli,  5'b?????} : ctrl = '{alufnt::sl,   opr2t::imm};
+            {uopc::srli,  5'b?????} : ctrl = '{alufnt::sr,   opr2t::imm};
+            {uopc::srai,  5'b?????} : ctrl = '{alufnt::sra,  opr2t::imm};
 
-            uopc::add    : ctrl = '{alufnt::add,  opr2t::rs2};
-            uopc::sub    : ctrl = '{alufnt::sub,  opr2t::rs2};
-            uopc::sll    : ctrl = '{alufnt::sl,   opr2t::rs2};
-            uopc::slt    : ctrl = '{alufnt::slt,  opr2t::rs2};
-            uopc::sltu   : ctrl = '{alufnt::sltu, opr2t::rs2};
-            uopc::xoro   : ctrl = '{alufnt::xoro, opr2t::rs2};
-            uopc::srl    : ctrl = '{alufnt::sr,   opr2t::rs2};
-            uopc::sra    : ctrl = '{alufnt::sra,  opr2t::rs2};
-            uopc::oro    : ctrl = '{alufnt::oro,  opr2t::rs2};
-            uopc::ando   : ctrl = '{alufnt::ando, opr2t::rs2};
+            {uopc::add,   5'b?????} : ctrl = '{alufnt::add,  opr2t::rs2};
+            {uopc::sub,   5'b?????} : ctrl = '{alufnt::sub,  opr2t::rs2};
+            {uopc::sll,   5'b?????} : ctrl = '{alufnt::sl,   opr2t::rs2};
+            {uopc::slt,   5'b?????} : ctrl = '{alufnt::slt,  opr2t::rs2};
+            {uopc::sltu,  5'b?????} : ctrl = '{alufnt::sltu, opr2t::rs2};
+            {uopc::xoro,  5'b?????} : ctrl = '{alufnt::xoro, opr2t::rs2};
+            {uopc::srl,   5'b?????} : ctrl = '{alufnt::sr,   opr2t::rs2};
+            {uopc::sra,   5'b?????} : ctrl = '{alufnt::sra,  opr2t::rs2};
+            {uopc::oro,   5'b?????} : ctrl = '{alufnt::oro,  opr2t::rs2};
+            {uopc::ando,  5'b?????} : ctrl = '{alufnt::ando, opr2t::rs2};
 
-            default      : ctrl = '{alufnt::add,  opr2t::imm};
+            {uopc::grevi, 5'b?????} : ctrl = '{alufnt::brev, opr2t::imm};
+
+            {uopc::andn,  5'b?????} : ctrl = '{alufnt::andn, opr2t::rs2};
+            {uopc::orn,   5'b?????} : ctrl = '{alufnt::orn,  opr2t::rs2};
+            {uopc::xnoro, 5'b?????} : ctrl = '{alufnt::xorn, opr2t::rs2};
+
+            {uopc::min,   5'b?????} : ctrl = '{alufnt::min,  opr2t::rs2};
+            {uopc::minu,  5'b?????} : ctrl = '{alufnt::minu, opr2t::rs2};
+            {uopc::max,   5'b?????} : ctrl = '{alufnt::max,  opr2t::rs2};
+            {uopc::maxu,  5'b?????} : ctrl = '{alufnt::maxu, opr2t::rs2};
+
+            {uopc::cbsxt, 5'b??000} : ctrl = '{alufnt::clz,  opr2t::imm};
+            {uopc::cbsxt, 5'b??001} : ctrl = '{alufnt::ctz,  opr2t::imm};
+            {uopc::cbsxt, 5'b??010} : ctrl = '{alufnt::cpop, opr2t::imm};
+            {uopc::cbsxt, 5'b??100} : ctrl = '{alufnt::sxtb, opr2t::imm};
+            {uopc::cbsxt, 5'b??101} : ctrl = '{alufnt::sxth, opr2t::imm};
+            {uopc::pack,  5'b?????} : ctrl = '{alufnt::zxth, opr2t::imm};
+
+            default                 : ctrl = '{alufnt::add,  opr2t::imm};
         endcase
     end
 

@@ -390,7 +390,7 @@ initial inst_cache_miss = 0;
 always_ff @(posedge itf.clk) begin
     if (dut.cpu.inst_resp) begin
         inst_cache_req <= inst_cache_req + 1;
-        if (dut.icache.miss) begin
+        if (dut.icache.pmem_resp & dut.icache.pmem_read) begin
             inst_cache_miss <= inst_cache_miss + 1;
         end
     end

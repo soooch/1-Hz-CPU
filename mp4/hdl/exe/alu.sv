@@ -15,18 +15,20 @@ module alu (
     logic cmp_unsigned;
     logic cmp_inverted;
     logic cmp_eq;
+    logic is_minmax;
 
     assign is_sub = fn[3];
     assign is_cmp = fn >= alufnt::slt;
     assign cmp_unsigned = fn[1];
     assign cmp_inverted = fn[0];
     assign cmp_eq = !fn[3];
+    assign is_minmax = fn[4:2] == 3'b110;
 
     rv32i_word in2_inv;
     rv32i_word in1_xor_in2;
 
     assign in2_inv = is_sub ? ~in2 : in2;
-    assign in1_xor_in2 = in1 ^ in2;
+    assign in1_xor_in2 = in1 ^ in2_inv;
     assign adder_out = in1 + in2_inv + is_sub;
 
     logic slt;
@@ -35,6 +37,9 @@ module alu (
                ? adder_out[31] 
                : cmp_unsigned ? in2[31] : in1[31];
     assign cmp_out = cmp_inverted ^ (cmp_eq ? in1_xor_in2 == 0 : slt);
+
+    rv32i_word minmax;
+    assign minmax = slt ^ cmp_inverted ? in1 : in2;
 
     logic [4:0] shamt;
     rv32i_word shin_r;
@@ -63,15 +68,30 @@ module alu (
     assign shout = (fn == alufnt::sr || fn == alufnt::sra ? shout_r : '0) | 
                    (fn == alufnt::sl                      ? shout_l : '0);
 
+    rv32i_word brev;
+    assign brev = {in1[7:0], in1[15:8], in1[23:16], in1[31:24]};
+
+
     rv32i_word logic_out;
     rv32i_word shift_logic;
 
+    // TODO: ensure this works for xnor, andn, orn
     assign logic_out = (fn == alufnt::xoro || fn == alufnt::oro ? in1_xor_in2 : '0) | 
-                       (fn == alufnt::oro || fn == alufnt::ando ? in1 & in2 : '0);
+                       (fn == alufnt::oro || fn == alufnt::ando ? in1 & in2_inv : '0);
     assign shift_logic = (is_cmp & slt) | logic_out | shout;
 
-    assign out = fn == alufnt::add || fn == alufnt::sub ? adder_out : shift_logic;
-
+    always_comb begin
+        unique case (fn)
+            alufnt::add,
+            alufnt::sub   : out = adder_out;
+            alufnt::min,
+            alufnt::max,
+            alufnt::minu,
+            alufnt::maxu  : out = minmax;
+            alufnt::brev  : out = brev;
+            default       : out = shift_logic;
+        endcase
+    end
 
 endmodule : alu
 

@@ -1,20 +1,40 @@
 
 package alufnt;
-typedef enum logic [3:0] {
-    add  = 4'b0000,
-    sl   = 4'b0001,
-    seq  = 4'b0010,
-    sne  = 4'b0011,
-    xoro = 4'b0100,
-    sr   = 4'b0101,
-    oro  = 4'b0110,
-    ando = 4'b0111,
-    sub  = 4'b1010,
-    sra  = 4'b1011,
-    slt  = 4'b1100,
-    sge  = 4'b1101,
-    sltu = 4'b1110,
-    sgeu = 4'b1111
+typedef enum logic [4:0] {
+    add  = 5'b00000,
+    sl   = 5'b00001,
+    seq  = 5'b00010,
+    sne  = 5'b00011,
+    xoro = 5'b00100,
+    sr   = 5'b00101,
+    oro  = 5'b00110,
+    ando = 5'b00111,
+    sub  = 5'b01010,
+    sra  = 5'b01011,
+    slt  = 5'b11100,
+    sge  = 5'b11101,
+    sltu = 5'b11110,
+    sgeu = 5'b11111,
+
+    andn = 5'b01111,
+    orn  = 5'b01110,
+    xorn = 5'b01100,
+
+    rol  = 5'b10001,
+    ror  = 5'b10101,
+    min  = 5'b11000,
+    max  = 5'b11001,
+    minu = 5'b11010,
+    maxu = 5'b11011,
+
+    clz  = 5'b10010,
+    ctz  = 5'b10011,
+    sxtb = 5'b10111,
+    sxth = 5'b10110,
+    cpop = 5'b10000,
+    zxth = 5'b10100,
+    brev = 5'b01000,
+    orcb = 5'b01001
 } alu_func_t;
 endpackage
 
@@ -147,7 +167,7 @@ typedef enum logic [5:0] {
     grevi, // rev8
     gorci, // orc.b
 
-    cbsext,
+    cbsxt,
     pack,  // zext.h
 
     lui,
