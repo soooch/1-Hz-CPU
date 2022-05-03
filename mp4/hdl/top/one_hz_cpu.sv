@@ -216,7 +216,7 @@ module one_hz_cpu (
             // the fetch over changing pc to respond to a prediction
             5'b11??? : bh_f0 = hold_bh_snap;
             5'b101?? : bh_f0 = bru_bh_snap;
-            5'b1001? : bh_f0 = {bh_f1, 1'b1};
+            5'b1001? : bh_f0 = {bh_f1[9:1], 1'b1};
             5'b10001 : bh_f0 = {bh_f1[8:0], bht_says_take_f1};
             default  : bh_f0 = bh_f1;
         endcase
@@ -1021,9 +1021,9 @@ module one_hz_cpu (
     )
     wb_lsu_has_rd_reg (
         .clk,
-        .rst(rst),
-        .ld(~mem_stall),
-        .din(mem_has_rd_ex),
+        .rst,
+        .ld(1'b1),
+        .din(mem_has_rd_ex & data_resp),
         .dout(lsu_has_rd_wb)
     );
     rg #(
@@ -1032,14 +1032,14 @@ module one_hz_cpu (
     wb_lsu_rd_reg (
         .clk,
         .rst,
-        .ld(~mem_stall),
+        .ld(1'b1),
         .din(mem_rd_ex),
         .dout(lsu_rd_wb)
     );
     rg wb_lsu_res_reg (
         .clk,
         .rst,
-        .ld(~mem_stall),
+        .ld(1'b1),
         .din(lsu_res_ex),
         .dout(lsu_res_wb)
     );
@@ -1192,6 +1192,7 @@ module one_hz_cpu (
                        ? {bru_bh_ex[8:0], bru_says_take}
                        : bru_bh_ex;
 
+    // TODO: this logic should probably be inside BHT
     always_comb begin
         unique case ({bru_bht_resp_ex, bru_says_take})
             3'b000 : bru_bht_update = 2'b00;
